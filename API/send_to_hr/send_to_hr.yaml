@@ -1,0 +1,54 @@
+---
+openapi: 3.0.0
+info:
+  title: Интеграция с HR-сервисом
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/98QLOKER/121/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: Отправка
+paths:
+  /send_to_hr:
+    post:
+      tags:
+      - Отправка
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendToHRRequest'
+        required: true
+      responses:
+        "200":
+          description: Успешная отправка данных в backend
+          content:
+            application/json:
+              example:
+                message: Данные успешно отправлены в backend
+        "400":
+          description: Некорректный запрос от frontend
+          content:
+            application/json:
+              example:
+                error: Не найдено обязательное поле в запросе
+        "404":
+          description: Пользователь не найден
+          content:
+            application/json:
+              example:
+                error: Пользователь не найден
+components:
+  schemas:
+    SendToHRRequest:
+      required:
+      - send_to_hr
+      - user_id
+      type: object
+      properties:
+        user_id:
+          type: integer
+          description: Идентификатор пользователя
+        send_to_hr:
+          type: boolean
+          description: Флаг для отправки
