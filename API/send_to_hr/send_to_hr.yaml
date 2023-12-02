@@ -48,7 +48,9 @@ components:
       properties:
         user_id:
           type: integer
+          example: 10
           description: Идентификатор пользователя
         send_to_hr:
           type: boolean
+          example: true
           description: Флаг для отправки
