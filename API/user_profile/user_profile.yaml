@@ -141,9 +141,6 @@ components:
           type: string
           description: "Строка base64, представляющая аватар пользователя"
     UserProfileUpdate:
-      required:
-      - avatar
-      - status
       type: object
       properties:
         status:
