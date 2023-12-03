@@ -78,12 +78,6 @@ paths:
             application/json:
               example:
                 message: Данные успешно отправлены в backend
-        "400":
-          description: Некорректный запрос от frontend
-          content:
-            application/json:
-              example:
-                error: Не найдено обязательное поле в запросе
         "404":
           description: Пользователь не найден
           content:
