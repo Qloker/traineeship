@@ -1,0 +1,214 @@
+---
+openapi: 3.0.0
+info:
+  title: Управление заявками
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/98QLOKER/applications/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: Заявки
+paths:
+  /applications:
+    get:
+      tags:
+      - Заявки
+      summary: Получение списка заявок
+      operationId: getApplications
+      responses:
+        "200":
+          description: Список заявок
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Application'
+        "404":
+          description: Заявки не найдены
+          content:
+            application/json:
+              example:
+                error: Заявки не найдены
+  /applications/{application_id}/send_access:
+    post:
+      tags:
+      - Заявки
+      summary: Отправка доступа
+      operationId: sendAccess
+      parameters:
+      - name: application_id
+        in: path
+        description: Идентификатор заявки
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Доступ отправлен успешно
+          content:
+            application/json:
+              example:
+                message: Доступ успешно отправлен
+        "400":
+          description: Некорректный запрос от frontend
+          content:
+            application/json:
+              example:
+                error: Не найдено обязательное поле в запросе
+        "404":
+          description: Заявка не найдена
+          content:
+            application/json:
+              example:
+                error: Заявка с указанным ID не существует
+  /applications/send_access_bulk:
+    post:
+      tags:
+      - Заявки
+      summary: Отправка доступа к нескольким заявкам
+      operationId: sendAccessBulk
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AccessCredentialsBulk'
+        required: true
+      responses:
+        "200":
+          description: Данные успешно отправлены
+        "400":
+          description: Некорректный запрос от frontend
+          content:
+            application/json:
+              example:
+                error: Не найдено обязательное поле в запросе
+        "404":
+          description: Заявка не найдена
+          content:
+            application/json:
+              example:
+                error: Заявка с указанным ID не существует
+  /applications/{application_id}/save_access:
+    post:
+      tags:
+      - Заявки
+      summary: Сохранение логина и пароля
+      operationId: saveAccess
+      parameters:
+      - name: application_id
+        in: path
+        description: Идентификатор заявки
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessCredentials'
+        required: true
+      responses:
+        "200":
+          description: Логин и пароль сохранены успешно
+          content:
+            application/json:
+              example:
+                message: Логин и пароль успешно сохранены
+        "400":
+          description: Некорректный запрос от frontend
+          content:
+            application/json:
+              example:
+                error: Не найдено обязательное поле в запросе
+        "404":
+          description: Заявка не найдена
+          content:
+            application/json:
+              example:
+                error: Заявка с указанным ID не существует
+components:
+  schemas:
+    Application:
+      type: object
+      properties:
+        application_id:
+          type: integer
+          description: Идентификатор заявки
+          format: int64
+          example: 11
+        name:
+          type: string
+          description: Имя
+        surname:
+          type: string
+          description: Фамилия
+        lastname:
+          type: string
+          description: Отчество
+        birth_date:
+          type: string
+          description: Дата рождения
+          format: date
+        city:
+          type: string
+          description: Город
+        number:
+          type: string
+          description: Номер телефона
+        email:
+          type: string
+          description: Email
+          format: email
+        test_tasks:
+          type: array
+          description: Массив тестовых заданий
+          items:
+            type: string
+        date:
+          type: string
+          description: Дата подачи заявки
+          format: date-time
+        traineeship:
+          type: string
+          description: Название стажировки
+    AccessCredentials:
+      required:
+      - login
+      - password
+      type: object
+      properties:
+        login:
+          type: integer
+          description: Логин для доступа
+          example: 79000000000
+        password:
+          type: string
+          description: Пароль для доступа
+    AccessCredentialsBulk:
+      required:
+      - application_id
+      - login
+      - password
+      type: object
+      properties:
+        application_id:
+          type: integer
+          description: Идентификатор заявки
+          format: int64
+          example: 11
+        login:
+          type: integer
+          description: Логин для доступа
+          example: 79000000000
+        password:
+          type: string
+          description: Пароль для доступа
