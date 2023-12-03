@@ -1,0 +1,149 @@
+---
+openapi: 3.0.0
+info:
+  title: Управление анонсами стажировок
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/98QLOKER/announcements/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: Анонсы стажировок
+paths:
+  /announcements:
+    get:
+      tags:
+      - Анонсы стажировок
+      summary: Получение всех актуальных анонсов
+      operationId: getAnnouncements
+      responses:
+        "200":
+          description: Список актуальных анонсов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Announcement'
+  /announcements/create:
+    post:
+      tags:
+      - Анонсы стажировок
+      summary: Создание нового анонса
+      operationId: createAnnouncement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnnouncementCreate'
+        required: true
+      responses:
+        "200":
+          description: Анонс успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Announcement'
+  /announcements/{announce_id}:
+    get:
+      tags:
+      - Анонсы стажировок
+      summary: Получение информации о конкретном анонсе
+      operationId: getAnnouncementById
+      parameters:
+      - name: announce_id
+        in: path
+        description: Идентификатор анонса
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Информация о конкретном анонсе
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Announcement'
+        "404":
+          description: Анонс не найден
+          content:
+            application/json:
+              example:
+                error: Анонс с указанным ID не существует
+components:
+  schemas:
+    Announcement:
+      type: object
+      properties:
+        traineeship_id:
+          type: integer
+          description: Идентификатор стажировки
+          format: int64
+        announce_id:
+          type: integer
+          description: Идентификатор анонса
+          format: int64
+        title:
+          type: string
+          description: Название анонса
+        description:
+          type: string
+          description: Описание анонса
+        images:
+          type: array
+          description: Ссылки на изображения
+          items:
+            type: string
+        form:
+          type: string
+          description: Ссылка на форму заявки
+        lead:
+          type: string
+          description: Руководитель стажировки
+        end_date:
+          type: string
+          description: Дата закрытия анонса
+          format: date
+        applications:
+          type: integer
+          description: Количество заявок для анонса
+    AnnouncementCreate:
+      required:
+      - description
+      - end_date
+      - form
+      - images
+      - title
+      - traineeship_id
+      type: object
+      properties:
+        traineeship_id:
+          type: integer
+          description: Идентификатор стажировки
+          format: int64
+          example: 12345
+        title:
+          type: string
+          description: Название анонса
+          example: Новый анонс
+        description:
+          type: string
+          description: Описание анонса
+          example: Описание нового анонса
+        images:
+          type: array
+          description: Ссылки на изображения
+          items:
+            type: string
+            example: https://example.com/image1.jpg
+        form:
+          type: string
+          description: Ссылка на форму заявки
+          example: https://example.com/application_form
+        end_date:
+          type: string
+          description: Дата закрытия анонса
+          format: date
+          example: 2023-12-31
