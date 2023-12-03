@@ -1,0 +1,339 @@
+---
+openapi: 3.0.0
+info:
+  title: Управление анонсами стажировок
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/98QLOKER/announcements/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: Анонсы стажировок
+paths:
+  /announcements:
+    get:
+      tags:
+      - Анонсы стажировок
+      summary: Получение всех актуальных анонсов
+      operationId: getAnnouncements
+      parameters:
+      - name: applications
+        in: query
+        description: Количество заявок для анонса
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          example: 10
+      responses:
+        "200":
+          description: Список актуальных анонсов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Announcement'
+        "404":
+          description: Анонсы не найдены
+          content:
+            application/json:
+              example:
+                error: Анонсы не найдены
+  /announcements/{announce_id}:
+    get:
+      tags:
+      - Анонсы стажировок
+      summary: Получение информации об анонсе по идентификатору
+      operationId: getAnnouncementById
+      parameters:
+      - name: announce_id
+        in: path
+        description: Идентификатор анонса
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Информация об анонсе
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Announcement'
+        "404":
+          description: Анонс не найден
+          content:
+            application/json:
+              example:
+                error: Анонс с указанным ID не существует
+  /announcements/{announce_id}/export:
+    get:
+      tags:
+      - Анонсы стажировок
+      summary: Экспорт анонса в Word или PDF
+      operationId: exportAnnouncement
+      parameters:
+      - name: announce_id
+        in: path
+        description: Идентификатор анонса
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      - name: type
+        in: query
+        description: Тип экспорта (word или pdf)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          enum:
+          - word
+          - pdf
+      responses:
+        "200":
+          description: Файл успешно экспортирован
+          content:
+            application/json:
+              example:
+                message: Файл успешно экспортирован
+        "400":
+          description: Некорректный запрос от frontend
+          content:
+            application/json:
+              example:
+                error: Некорректный тип экспорта
+        "404":
+          description: Анонс не найден
+          content:
+            application/json:
+              example:
+                error: Анонс с указанным ID не существует
+  /announcements/{announce_id}/export_form:
+    get:
+      tags:
+      - Анонсы стажировок
+      summary: Получение ссылки на форму анонса
+      operationId: exportAnnouncementForm
+      parameters:
+      - name: announce_id
+        in: path
+        description: Идентификатор анонса
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Ссылка на форму успешно получена
+          content:
+            application/json:
+              example:
+                form_link: https://example.com/announcement_form
+        "404":
+          description: Анонс не найден
+          content:
+            application/json:
+              example:
+                error: Анонс с указанным ID не существует
+  /announcements/create:
+    post:
+      tags:
+      - Анонсы стажировок
+      summary: Создание нового анонса
+      operationId: createAnnouncement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnnouncementCreate'
+            example:
+              traineeship_id: 12345
+              title: Новый анонс
+              description: Описание нового анонса
+              images:
+              - https://example.com/image1.jpg
+              - https://example.com/image2.jpg
+              form: https://example.com/application_form
+              end_date: 2023-12-31
+        required: true
+      responses:
+        "200":
+          description: Анонс успешно создан
+          content:
+            application/json:
+              example:
+                message: Анонс успешно создан
+        "400":
+          description: Некорректный запрос от frontend
+          content:
+            application/json:
+              example:
+                error: Не найдено обязательное поле в запросе
+        "404":
+          description: Стажировка не найдена
+          content:
+            application/json:
+              example:
+                error: Стажировка с указанным ID не существует
+  /announcements/update/{announce_id}:
+    put:
+      tags:
+      - Анонсы стажировок
+      summary: Обновление информации об анонсе
+      operationId: updateAnnouncement
+      parameters:
+      - name: announce_id
+        in: path
+        description: Идентификатор анонса
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnnouncementCreate'
+            example:
+              traineeship_id: 12345
+              title: Обновленный анонс
+              description: Обновленное описание анонса
+              images:
+              - https://example.com/new_image1.jpg
+              - https://example.com/new_image2.jpg
+              form: https://example.com/new_application_form
+              end_date: 2024-01-31
+        required: true
+      responses:
+        "200":
+          description: Информация об анонсе успешно обновлена
+          content:
+            application/json:
+              example:
+                message: Информация об анонсе успешно обновлена
+        "400":
+          description: Некорректный запрос от frontend
+          content:
+            application/json:
+              example:
+                error: Не найдено обязательное поле в запросе
+        "404":
+          description: Анонс не найден
+          content:
+            application/json:
+              example:
+                error: Анонс с указанным ID не существует
+  /announcements/delete/{announce_id}:
+    delete:
+      tags:
+      - Анонсы стажировок
+      summary: Удаление анонса по идентификатору
+      operationId: deleteAnnouncement
+      parameters:
+      - name: announce_id
+        in: path
+        description: Идентификатор анонса
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Анонс успешно удален
+          content:
+            application/json:
+              example:
+                message: Анонс успешно удален
+        "404":
+          description: Анонс не найден
+          content:
+            application/json:
+              example:
+                error: Анонс с указанным ID не существует
+components:
+  schemas:
+    Announcement:
+      type: object
+      properties:
+        traineeship_id:
+          type: integer
+          description: Идентификатор стажировки
+          format: int64
+        announce_id:
+          type: integer
+          description: Идентификатор анонса
+          format: int64
+        title:
+          type: string
+          description: Название анонса
+        description:
+          type: string
+          description: Описание анонса
+        images:
+          type: array
+          description: Ссылки на изображения
+          items:
+            type: string
+        form:
+          type: string
+          description: Ссылка на форму заявки
+        lead:
+          type: string
+          description: Руководитель стажировки
+        end_date:
+          type: string
+          description: Дата закрытия анонса
+          format: date
+        applications:
+          type: integer
+          description: Количество заявок для анонса
+    AnnouncementCreate:
+      required:
+      - description
+      - end_date
+      - form
+      - images
+      - title
+      - traineeship_id
+      type: object
+      properties:
+        traineeship_id:
+          type: integer
+          description: Идентификатор стажировки
+          format: int64
+          example: 12345
+        title:
+          type: string
+          description: Название анонса
+          example: Новый анонс
+        description:
+          type: string
+          description: Описание анонса
+          example: Описание нового анонса
+        images:
+          type: array
+          description: Ссылки на изображения
+          items:
+            type: string
+            example: https://example.com/image1.jpg
+        form:
+          type: string
+          description: Ссылка на форму заявки
+          example: https://example.com/application_form
+        end_date:
+          type: string
+          format: date
+          example: 2023-12-31
