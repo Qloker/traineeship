@@ -1,0 +1,149 @@
+---
+openapi: 3.0.0
+info:
+  title: Управление профилем пользователя
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/98QLOKER/User/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: Профиль пользователя
+paths:
+  /user_profile:
+    get:
+      tags:
+      - Профиль пользователя
+      summary: Получение информации о пользователе
+      operationId: getUserProfile
+      parameters:
+      - name: user_id
+        in: query
+        description: Идентификатор пользователя
+        required: true
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/UserId'
+      responses:
+        "200":
+          description: Информация о пользователе
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+              example:
+                name: Иван
+                surname: Иванов
+                lastname: Иванович
+                birth_date: 1990-01-01
+                city: Москва
+                number: "79000000000"
+                email: ivan@example.com
+                status: Активен
+                avatar: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAAAAB..."
+        "404":
+          description: Пользователь не найден
+          content:
+            application/json:
+              example:
+                error: Пользователь с указанным ID не существует
+  /update_user_profile:
+    post:
+      tags:
+      - Профиль пользователя
+      summary: Обновление статуса и аватара пользователя
+      operationId: updateUserProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfileUpdate'
+            example:
+              user_id: 12345
+              status: Неактивен
+              avatar: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAAAAB..."
+        required: true
+      responses:
+        "200":
+          description: Информация о пользователе успешно обновлена
+          content:
+            application/json:
+              example:
+                message: Данные успешно отправлены в backend
+        "400":
+          description: Некорректный запрос от frontend
+          content:
+            application/json:
+              example:
+                error: Не найдено обязательное поле в запросе
+        "404":
+          description: Пользователь не найден
+          content:
+            application/json:
+              example:
+                error: Пользователь с указанным ID не существует
+components:
+  schemas:
+    UserId:
+      type: integer
+      description: Идентификатор пользователя
+      format: int64
+    UserProfile:
+      required:
+      - avatar
+      - birth_date
+      - city
+      - email
+      - lastname
+      - name
+      - number
+      - status
+      - surname
+      type: object
+      properties:
+        name:
+          type: string
+          description: Имя пользователя
+        surname:
+          type: string
+          description: Фамилия пользователя
+        lastname:
+          type: string
+          description: Отчество пользователя
+        birth_date:
+          type: string
+          description: Дата рождения пользователя
+          format: date
+        city:
+          type: string
+          description: Город пользователя
+        number:
+          type: string
+          description: Номер телефона пользователя
+        email:
+          type: string
+          description: Email пользователя
+          format: email
+        status:
+          type: string
+          description: Статус пользователя
+        avatar:
+          type: string
+          description: "Строка base64, представляющая аватар пользователя"
+    UserProfileUpdate:
+      required:
+      - avatar
+      - status
+      - user_id
+      type: object
+      properties:
+        user_id:
+          type: integer
+          description: Идентификатор пользователя
+          format: int64
+        status:
+          type: string
+          description: Новый статус пользователя
+        avatar:
+          type: string
+          description: "Строка base64, представляющая новый аватар пользователя"
