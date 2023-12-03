@@ -135,6 +135,90 @@ paths:
             application/json:
               example:
                 error: Заявка с указанным ID не существует
+  /applications/accepted:
+    get:
+      tags:
+      - Заявки
+      summary: Получение списка подтвержденных заявок
+      operationId: getAcceptedApplications
+      responses:
+        "200":
+          description: Список подтвержденных заявок
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Application'
+        "404":
+          description: Подтвержденные заявки не найдены
+          content:
+            application/json:
+              example:
+                error: Подтвержденные заявки не найдены
+  /applications/not_accepted:
+    get:
+      tags:
+      - Заявки
+      summary: Получение списка отклоненных заявок
+      operationId: getNotAcceptedApplications
+      responses:
+        "200":
+          description: Список отклоненных заявок
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Application'
+        "404":
+          description: Отклоненные заявки не найдены
+          content:
+            application/json:
+              example:
+                error: Отклоненные заявки не найдены
+  /applications/approved:
+    get:
+      tags:
+      - Заявки
+      summary: Получение списка одобренных заявок
+      operationId: getApprovedApplications
+      responses:
+        "200":
+          description: Список одобренных заявок
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Application'
+        "404":
+          description: Одобренные заявки не найдены
+          content:
+            application/json:
+              example:
+                error: Одобренные заявки не найдены
+  /applications/not_approved:
+    get:
+      tags:
+      - Заявки
+      summary: Получение списка не одобренных заявок
+      operationId: getNotApprovedApplications
+      responses:
+        "200":
+          description: Список не одобренных заявок
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Application'
+        "404":
+          description: Не одобренные заявки не найдены
+          content:
+            application/json:
+              example:
+                error: Не одобренные заявки не найдены
 components:
   schemas:
     Application:
@@ -162,8 +246,10 @@ components:
           type: string
           description: Город
         number:
-          type: string
+          type: integer
           description: Номер телефона
+          format: int64
+          example: 79000000000
         email:
           type: string
           description: Email
@@ -208,7 +294,6 @@ components:
         login:
           type: integer
           description: Логин для доступа
-          example: 79000000000
         password:
           type: string
           description: Пароль для доступа
