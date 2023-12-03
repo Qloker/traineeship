@@ -1,0 +1,59 @@
+---
+openapi: 3.0.0
+info:
+  title: Обработка заявки
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/98QLOKER/send_to_security/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: Обработка заявки
+paths:
+  /send_to_security:
+    post:
+      tags:
+      - Обработка заявки
+      summary: Решение по заявке
+      operationId: sendToSecurity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecurityRequest'
+            example:
+              application_id: 123
+              accepted: true
+        required: true
+      responses:
+        "200":
+          description: Успешная отправка данных
+          content:
+            application/json:
+              example:
+                message: Данные успешно отправлены в backend
+        "400":
+          description: Некорректный запрос от frontend
+          content:
+            application/json:
+              example:
+                error: Не найдено обязательное поле в запросе
+        "404":
+          description: Заявка не найдена
+          content:
+            application/json:
+              example:
+                error: Заявка с указанным ID не существует
+components:
+  schemas:
+    SecurityRequest:
+      required:
+      - accepted
+      - application_id
+      type: object
+      properties:
+        application_id:
+          type: integer
+          description: Идентификатор заявки
+        accepted:
+          type: boolean
+          description: Флаг подтверждения
