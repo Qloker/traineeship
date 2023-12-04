@@ -222,6 +222,18 @@ paths:
 components:
   schemas:
     Application:
+      required:
+      - application_id
+      - birth_date
+      - city
+      - date
+      - email
+      - lastname
+      - name
+      - number
+      - surname
+      - test_tasks
+      - traineeship
       type: object
       properties:
         application_id:
@@ -294,6 +306,7 @@ components:
         login:
           type: integer
           description: Логин для доступа
+          example: 79000000000
         password:
           type: string
           description: Пароль для доступа
