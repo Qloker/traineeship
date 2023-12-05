@@ -1,0 +1,207 @@
+---
+openapi: 3.0.0
+info:
+  title: Управление лекциями
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/98QLOKER/lectures/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: Лекции
+paths:
+  /traineeships/{traineeship_id}/lectures:
+    get:
+      tags:
+      - Лекции
+      summary: Получение списка лекций курса
+      operationId: getLecturesByTraineeshipId
+      parameters:
+      - name: traineeship_id
+        in: path
+        description: Идентификатор стажировки
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Список лекций
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lecture'
+        "404":
+          description: Лекции не найдены
+          content:
+            application/json:
+              example:
+                error: Лекции не найдены
+  /lectures/without_mentor:
+    get:
+      tags:
+      - Лекции
+      summary: Получение списка лекций без менторов
+      operationId: getLecturesWithoutMentor
+      responses:
+        "200":
+          description: Список лекций без менторов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lecture'
+        "404":
+          description: Лекции без менторов не найдены
+          content:
+            application/json:
+              example:
+                error: Лекции без менторов не найдены
+  /traineeships/{traineeship_id}/lectures/create:
+    post:
+      tags:
+      - Лекции
+      summary: Создание лекции в курсе
+      operationId: createLectureInTraineeship
+      parameters:
+      - name: traineeship_id
+        in: path
+        description: Идентификатор стажировки
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLectureRequest'
+        required: true
+      responses:
+        "201":
+          description: Лекция успешно создана
+          content:
+            application/json:
+              example:
+                message: Лекция успешно создана
+        "400":
+          description: Некорректный запрос от frontend
+          content:
+            application/json:
+              example:
+                error: Не найдено обязательное поле в запросе
+        "404":
+          description: Стажировка не найдена
+          content:
+            application/json:
+              example:
+                error: Стажировка с указанным ID не существует
+  /traineeships/{traineeship_id}/lectures/{lecture_id}:
+    get:
+      tags:
+      - Лекции
+      summary: Получение информации о конкретной лекции
+      operationId: getLectureDetails
+      parameters:
+      - name: traineeship_id
+        in: path
+        description: Идентификатор стажировки
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      - name: lecture_id
+        in: path
+        description: Идентификатор лекции
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Информация о лекции
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lecture'
+        "404":
+          description: Лекция не найдена
+          content:
+            application/json:
+              example:
+                error: Лекция с указанным ID не существует
+components:
+  schemas:
+    Lecture:
+      required:
+      - broadcast_date
+      - deadline
+      - description
+      - homework_text
+      - preview
+      - title
+      type: object
+      properties:
+        title:
+          type: string
+          description: Название лекции
+        preview:
+          type: string
+          description: Изображение лекции
+        broadcast_date:
+          type: string
+          description: Плановая дата проведения лекции
+        description:
+          type: string
+          description: Описание лекции
+        deadline:
+          type: string
+          description: Дата сдачи домашнего задания
+        homework_text:
+          type: string
+          description: Описание домашнего задания
+        attachment:
+          type: string
+          description: Файл задания
+        mentor:
+          type: string
+          description: Имя и фамилия ментора лекции
+    CreateLectureRequest:
+      required:
+      - title
+      type: object
+      properties:
+        title:
+          type: string
+          description: Название лекции
+        preview:
+          type: string
+          description: Изображение лекции
+        broadcast_date:
+          type: string
+          description: Плановая дата проведения лекции
+        description:
+          type: string
+          description: Описание лекции
+        deadline:
+          type: string
+          description: Дата сдачи домашнего задания
+        homework_text:
+          type: string
+          description: Описание домашнего задания
+        attachment:
+          type: string
+          description: Файл задания
+        mentor:
+          type: string
+          description: Имя и фамилия ментора лекции
