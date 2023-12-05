@@ -1,0 +1,201 @@
+---
+openapi: 3.0.0
+info:
+  title: Управление стажировками
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/98QLOKER/courses/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: Стажировки
+paths:
+  /traineeships:
+    get:
+      tags:
+      - Стажировки
+      summary: Получение списка стажировок
+      operationId: getTraineeships
+      responses:
+        "200":
+          description: Список стажировок
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Traineeship'
+        "404":
+          description: Стажировки не найдены
+          content:
+            application/json:
+              example:
+                error: Стажировки не найдены
+  /traineeships/create:
+    post:
+      tags:
+      - Стажировки
+      summary: Создание стажировки
+      operationId: createTraineeship
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTraineeshipRequest'
+        required: true
+      responses:
+        "201":
+          description: Стажировка успешно создана
+          content:
+            application/json:
+              example:
+                message: Стажировка успешно создана
+        "400":
+          description: Некорректный запрос от frontend
+          content:
+            application/json:
+              example:
+                error: Не найдено обязательное поле в запросе
+  /traineeships/{traineeship_id}:
+    get:
+      tags:
+      - Стажировки
+      summary: Получение информации о конкретном курсе
+      operationId: getTraineeshipById
+      parameters:
+      - name: traineeship_id
+        in: path
+        description: Идентификатор стажировки
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Информация о стажировке
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TraineeshipDetails'
+        "404":
+          description: Стажировка не найдена
+          content:
+            application/json:
+              example:
+                error: Стажировка с указанным ID не существует
+components:
+  schemas:
+    Traineeship:
+      required:
+      - applications
+      - end_date
+      - lead
+      - start_date
+      - title
+      type: object
+      properties:
+        title:
+          type: string
+          description: Название стажировки
+        lead:
+          type: string
+          description: Имя и фамилия руководителя стажировки
+        start_date:
+          type: string
+          description: Дата начала стажировки
+          format: date
+        applications:
+          type: integer
+          description: Количество поданных заявок
+        end_date:
+          type: string
+          description: Дата конца стажировки
+          format: date
+    CreateTraineeshipRequest:
+      required:
+      - end_date
+      - start_date
+      - title
+      type: object
+      properties:
+        title:
+          type: string
+          description: Название стажировки
+        start_date:
+          type: string
+          description: Дата начала стажировки
+          format: date
+        end_date:
+          type: string
+          description: Дата конца стажировки
+          format: date
+        plan_file:
+          type: string
+          description: Файл курса
+          format: binary
+    TraineeshipDetails:
+      required:
+      - end_date
+      - lectures
+      - start_date
+      - title
+      type: object
+      properties:
+        title:
+          type: string
+          description: Название стажировки
+        plan_file:
+          type: string
+          description: План стажировки
+          format: binary
+        start_date:
+          type: string
+          description: Дата начала стажировки
+          format: date
+        end_date:
+          type: string
+          description: Дата конца стажировки
+          format: date
+        lectures:
+          type: array
+          items:
+            $ref: '#/components/schemas/Lecture'
+    Lecture:
+      required:
+      - broadcast_date
+      - deadline
+      - description
+      - homework_text
+      - mentor
+      - preview
+      - title
+      type: object
+      properties:
+        title:
+          type: string
+          description: Название лекции
+        preview:
+          type: string
+          description: Изображение лекции
+        broadcast_date:
+          type: string
+          description: Плановая дата проведения лекции
+          format: date-time
+        description:
+          type: string
+          description: Описание лекции
+        deadline:
+          type: string
+          description: Дата сдачи домашнего задания
+          format: date
+        homework_text:
+          type: string
+          description: Описание домашнего задания
+        attachment:
+          type: string
+          description: Файл задания
+          format: binary
+        mentor:
+          type: string
+          description: Имя и фамилия ментора лекции
