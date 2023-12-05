@@ -1,0 +1,283 @@
+---
+openapi: 3.0.0
+info:
+  title: Управление стажерами
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/98QLOKER/trainees/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: Стажеры
+paths:
+  /trainees/new:
+    get:
+      tags:
+      - Стажеры
+      summary: Получение списка стажеров без менторов
+      operationId: getNewTrainees
+      responses:
+        "200":
+          description: Список стажеров без менторов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TraineeWithoutMentor'
+        "404":
+          description: Стажеры без менторов не найдены
+          content:
+            application/json:
+              example:
+                error: Стажеры без менторов не найдены
+  /trainees/assigned:
+    get:
+      tags:
+      - Стажеры
+      summary: Получение списка стажеров с назначенными менторами
+      operationId: getAssignedTrainees
+      responses:
+        "200":
+          description: Список стажеров с назначенными менторами
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TraineeWithoutMentor'
+        "404":
+          description: Стажеры с назначенными менторами не найдены
+          content:
+            application/json:
+              example:
+                error: Стажеры с назначенными менторами не найдены
+  /{traineeship_id}/trainees/completed:
+    get:
+      tags:
+      - Стажеры
+      summary: "Получение списка стажеров, которые закончили стажировку"
+      operationId: getCompletedTrainees
+      parameters:
+      - name: traineeship_id
+        in: path
+        description: Идентификатор стажировки
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: "Список стажеров, которые закончили стажировку"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CompletedTrainee'
+        "404":
+          description: "Стажеры, закончившие стажировку, не найдены"
+          content:
+            application/json:
+              example:
+                error: "Стажеры, закончившие стажировку, не найдены"
+  /trainees/hr_directed:
+    get:
+      tags:
+      - Стажеры
+      summary: "Получение списка стажеров, направленных в HR"
+      operationId: getHrDirectedTrainees
+      responses:
+        "200":
+          description: "Список стажеров, направленных в HR"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TraineeWithoutMentor'
+        "404":
+          description: "Стажеры, направленные в HR, не найдены"
+          content:
+            application/json:
+              example:
+                error: "Стажеры, направленные в HR, не найдены"
+  /trainees/declined:
+    get:
+      tags:
+      - Стажеры
+      summary: "Получение списка стажеров, которые были отклонены"
+      operationId: getDeclinedTrainees
+      responses:
+        "200":
+          description: "Список стажеров, которые были отклонены"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TraineeWithoutMentor'
+        "404":
+          description: "Стажеры, отклоненные не найдены"
+          content:
+            application/json:
+              example:
+                error: "Стажеры, отклоненные не найдены"
+  /trainees/{trainee_id}:
+    get:
+      tags:
+      - Стажеры
+      summary: Получение подробной информации о стажере
+      operationId: getTraineeDetails
+      parameters:
+      - name: trainee_id
+        in: path
+        description: Идентификатор стажера
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Подробная информация о стажере
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TraineeDetails'
+        "404":
+          description: Стажер не найден
+          content:
+            application/json:
+              example:
+                error: Стажер с указанным ID не существует
+  /trainees/{trainee_id}/assign/{mentor_id}:
+    put:
+      tags:
+      - Стажеры
+      summary: Назначение ментора выбранному стажеру
+      operationId: assignMentorToTrainee
+      parameters:
+      - name: trainee_id
+        in: path
+        description: Идентификатор стажера
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      - name: mentor_id
+        in: path
+        description: Идентификатор ментора
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Ментор успешно назначен
+          content:
+            application/json:
+              example:
+                message: Ментор успешно назначен
+        "404":
+          description: Стажер или ментор не найден
+          content:
+            application/json:
+              example:
+                error: Стажер или ментор с указанным ID не существует
+components:
+  schemas:
+    TraineeWithoutMentor:
+      required:
+      - course
+      - name
+      - surname
+      type: object
+      properties:
+        name:
+          type: string
+          description: Имя стажера
+        surname:
+          type: string
+          description: Фамилия стажера
+        course:
+          type: string
+          description: Название курса
+        avatar:
+          type: string
+          description: Изображение стажера
+    CompletedTrainee:
+      required:
+      - average_mark
+      - end_date
+      - homeworks_done
+      - name
+      - surname
+      type: object
+      properties:
+        name:
+          type: string
+          description: Имя стажера
+        surname:
+          type: string
+          description: Фамилия стажера
+        end_date:
+          type: string
+          description: Дата окончания курса стажером
+          format: date
+        average_mark:
+          type: number
+          description: Средний балл
+        homeworks_done:
+          type: integer
+          description: Количество сданных домашних заданий
+    TraineeDetails:
+      required:
+      - average_mark
+      - course
+      - f_comment
+      - lectures
+      - mentor
+      - name
+      - surname
+      type: object
+      properties:
+        name:
+          type: string
+          description: Имя стажера
+        surname:
+          type: string
+          description: Фамилия стажера
+        course:
+          type: string
+          description: Название курса
+        mentor:
+          type: string
+          description: Имя и фамилия ментора
+        lectures:
+          minItems: 0
+          type: array
+          description: Массив лекций и оценок за домашние задания
+          items:
+            $ref: '#/components/schemas/TraineeDetails_lectures'
+        average_mark:
+          type: number
+          description: Средний балл
+        f_comment:
+          type: string
+          description: Комментарий о прохождении стажировки
+    TraineeDetails_lectures:
+      type: object
+      properties:
+        lecture_title:
+          type: string
+          description: Название лекции
+        mark:
+          type: integer
+          description: Оценка за домашнее задание
