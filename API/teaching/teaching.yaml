@@ -179,6 +179,72 @@ paths:
             application/json:
               example:
                 error: Стажер с указанным ID не существует
+  /traineeships/{mentor_id}/trainees:
+    get:
+      tags:
+      - Преподавание
+      summary: Получение списка стажеров ментора на выбранном курсе
+      operationId: getMentorTrainees
+      parameters:
+      - name: mentor_id
+        in: path
+        description: Идентификатор ментора
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Список стажеров ментора на выбранном курсе
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MentorTrainee'
+        "404":
+          description: Стажеры не найдены
+          content:
+            application/json:
+              example:
+                error: Стажеры не найдены
+  /lectures/{trainee_id}/homeworks:
+    post:
+      tags:
+      - Преподавание
+      summary: Сохранение итогового комментария от ментора
+      operationId: saveFinalComment
+      parameters:
+      - name: trainee_id
+        in: path
+        description: Идентификатор стажера
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Параметры запроса
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/trainee_id_homeworks_body'
+      responses:
+        "200":
+          description: Итоговый комментарий успешно сохранен
+          content:
+            application/json:
+              example:
+                message: Итоговый комментарий успешно сохранен
+        "404":
+          description: Стажер не найден
+          content:
+            application/json:
+              example:
+                error: Стажер с указанным ID не существует
 components:
   schemas:
     MentorCourse:
@@ -231,6 +297,22 @@ components:
         attachment:
           type: string
           description: Ссылка на файл ответа стажера
+    MentorTrainee:
+      required:
+      - f_comment
+      - name
+      - surname
+      type: object
+      properties:
+        name:
+          type: string
+          description: Имя стажера
+        surname:
+          type: string
+          description: Фамилия стажера
+        f_comment:
+          type: string
+          description: Итоговый комментарий ментора
     homeworks_trainee_id_body:
       required:
       - comment
@@ -243,3 +325,11 @@ components:
         comment:
           type: string
           description: Комментарий к домашнему заданию
+    trainee_id_homeworks_body:
+      required:
+      - f_comment
+      type: object
+      properties:
+        f_comment:
+          type: string
+          description: Итоговый комментарий от ментора
