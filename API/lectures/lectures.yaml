@@ -102,6 +102,7 @@ paths:
             application/json:
               example:
                 error: Стажировка с указанным ID не существует
+                
   /traineeships/{traineeship_id}/lectures/{lecture_id}:
     get:
       tags:
@@ -140,6 +141,57 @@ paths:
             application/json:
               example:
                 error: Лекция с указанным ID не существует
+      
+  /traineeships/{traineeship_id}/lectures/{lecture_id}/upload_file:
+    post:
+      tags:
+        - Лекции
+      summary: Загрузка дополнительного материала от ментора
+      operationId: uploadMaterialByMentor
+      parameters:
+        - name: traineeship_id
+          in: path
+          required: true
+          description: Идентификатор стажировки
+          schema:
+            type: integer
+            format: int64
+        - name: lecture_id
+          in: path
+          required: true
+          description: Идентификатор лекции
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                mentor_file:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: "Материал успешно загружен"
+          content:
+            application/json:
+              example:
+                message: "Материал успешно загружен"
+        '400':
+          description: "Некорректный запрос от frontend"
+          content:
+            application/json:
+              example:
+                error: "Не найдено обязательное поле в запросе"
+        '404':
+          description: "Лекция не найдена"
+          content:
+            application/json:
+              example:
+                error: "Лекция с указанным ID не существует"
 components:
   schemas:
     Lecture:
