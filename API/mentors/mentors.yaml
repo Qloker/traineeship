@@ -1,0 +1,203 @@
+---
+openapi: 3.0.0
+info:
+  title: Управление менторами
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/98QLOKER/mentors/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: Менторы
+paths:
+  /mentors:
+    get:
+      tags:
+      - Менторы
+      summary: Получение списка менторов
+      operationId: getMentorsList
+      responses:
+        "200":
+          description: Список менторов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MentorDetailsWithAvatar'
+        "404":
+          description: Менторы не найдены
+          content:
+            application/json:
+              example:
+                error: Менторы не найдены
+  /mentors/{mentor_id}:
+    get:
+      tags:
+      - Менторы
+      summary: Получение подробной информации о менторе
+      operationId: getMentorDetails
+      parameters:
+      - name: mentor_id
+        in: path
+        description: Идентификатор ментора
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Подробная информация о менторе
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MentorDetails'
+        "404":
+          description: Ментор не найден
+          content:
+            application/json:
+              example:
+                error: Ментор с указанным ID не существует
+    put:
+      tags:
+      - Менторы
+      summary: Редактирование назначенных лекций и стажеров у ментора
+      operationId: editMentorAssignments
+      parameters:
+      - name: mentor_id
+        in: path
+        description: Идентификатор ментора
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditMentorAssignments'
+        required: true
+      responses:
+        "200":
+          description: Параметры ментора успешно отредактированы
+          content:
+            application/json:
+              example:
+                message: Параметры ментора успешно отредактированы
+        "404":
+          description: Ментор не найден
+          content:
+            application/json:
+              example:
+                error: Ментор с указанным ID не существует
+components:
+  schemas:
+    MentorDetails:
+      required:
+      - avatar
+      - lectures
+      - name
+      - surname
+      - trainees
+      type: object
+      properties:
+        name:
+          type: string
+          description: Имя ментора
+        surname:
+          type: string
+          description: Фамилия ментора
+        lectures:
+          minItems: 0
+          type: array
+          description: Массив лекций
+          items:
+            type: string
+        trainees:
+          minItems: 0
+          type: array
+          description: Массив стажеров
+          items:
+            $ref: '#/components/schemas/MentorDetails_trainees'
+        avatar:
+          type: string
+          description: Аватар ментора
+    MentorDetailsWithAvatar:
+      required:
+      - avatar
+      - lectures
+      - name
+      - surname
+      - trainees
+      type: object
+      properties:
+        name:
+          type: string
+          description: Имя ментора
+        surname:
+          type: string
+          description: Фамилия ментора
+        lectures:
+          minItems: 0
+          type: array
+          description: Массив лекций
+          items:
+            type: string
+        trainees:
+          minItems: 0
+          type: array
+          description: Массив стажеров
+          items:
+            $ref: '#/components/schemas/MentorDetails_trainees'
+        avatar:
+          type: string
+          description: Аватар ментора
+    EditMentorAssignments:
+      required:
+      - lecture_ids
+      - trainee_ids
+      type: object
+      properties:
+        lecture_ids:
+          minItems: 0
+          type: array
+          description: Массив идентификаторов лекций
+          example:
+          - 4
+          - 21
+          - 3
+          items:
+            type: integer
+        trainee_ids:
+          minItems: 0
+          type: array
+          description: Массив идентификаторов стажеров
+          example:
+          - 11
+          - 231
+          - 34
+          items:
+            type: integer
+    MentorDetails_trainees:
+      required:
+      - avatar
+      - name
+      - surname
+      - traineeship
+      type: object
+      properties:
+        name:
+          type: string
+          description: Имя стажера
+        surname:
+          type: string
+          description: Фамилия стажера
+        traineeship:
+          type: string
+          description: Название курса
+        avatar:
+          type: string
+          description: Аватар стажера
