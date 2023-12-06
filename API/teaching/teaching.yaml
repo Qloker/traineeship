@@ -1,0 +1,245 @@
+---
+openapi: 3.0.0
+info:
+  title: Преподавание
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/98QLOKER/teaching/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: Преподавание
+paths:
+  /traineeships/{mentor_id}:
+    get:
+      tags:
+      - Преподавание
+      summary: Получение списка курсов ментора
+      operationId: getMentorCourses
+      parameters:
+      - name: mentor_id
+        in: path
+        description: Идентификатор ментора
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Список курсов ментора
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MentorCourse'
+        "404":
+          description: Курсы не найдены
+          content:
+            application/json:
+              example:
+                error: Курсы не найдены
+  /lectures/{lecture_id}/homeworks:
+    get:
+      tags:
+      - Преподавание
+      summary: "Получение списка стажеров, которые сдали домашнее задание в указанной лекции"
+      operationId: getHomeworksForLecture
+      parameters:
+      - name: mentor_id
+        in: query
+        description: Идентификатор текущего ментора
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int64
+      - name: lecture_id
+        in: path
+        description: Идентификатор лекции
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: "Список стажеров, сдавших домашнее задание в указанной лекции"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HomeworkSubmission'
+        "404":
+          description: Стажеры не найдены
+          content:
+            application/json:
+              example:
+                error: Стажеры не найдены
+  /lectures/{lecture_id}/homeworks/{trainee_id}:
+    get:
+      tags:
+      - Преподавание
+      summary: Получение подробной информации о домашнем задании стажера
+      operationId: getHomeworkDetails
+      parameters:
+      - name: mentor_id
+        in: query
+        description: Идентификатор текущего ментора
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int64
+      - name: lecture_id
+        in: path
+        description: Идентификатор лекции
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      - name: trainee_id
+        in: path
+        description: Идентификатор стажера
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Подробная информация о домашнем задании стажера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HomeworkDetails'
+        "404":
+          description: Домашнее задание стажера не найдено
+          content:
+            application/json:
+              example:
+                error: Домашнее задание стажера не найдено
+    post:
+      tags:
+      - Преподавание
+      summary: Выставление оценки и комментария к домашнему заданию
+      operationId: gradeHomework
+      parameters:
+      - name: mentor_id
+        in: query
+        description: Идентификатор текущего ментора
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int64
+      - name: lecture_id
+        in: path
+        description: Идентификатор лекции
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      - name: trainee_id
+        in: path
+        description: Идентификатор стажера
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Параметры запроса
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/homeworks_trainee_id_body'
+      responses:
+        "200":
+          description: Оценка и комментарий успешно добавлены
+          content:
+            application/json:
+              example:
+                message: Оценка и комментарий успешно добавлены
+        "404":
+          description: Стажер не найден
+          content:
+            application/json:
+              example:
+                error: Стажер с указанным ID не существует
+components:
+  schemas:
+    MentorCourse:
+      required:
+      - title
+      - traineeship_id
+      type: object
+      properties:
+        traineeship_id:
+          type: integer
+          description: Идентификатор курса
+          format: int64
+        title:
+          type: string
+          description: Название курса
+    HomeworkSubmission:
+      required:
+      - mark
+      - name
+      - surname
+      - trainee_id
+      type: object
+      properties:
+        trainee_id:
+          type: integer
+          description: Идентификатор стажера
+          format: int64
+        name:
+          type: string
+          description: Имя стажера
+        surname:
+          type: string
+          description: Фамилия стажера
+        mark:
+          type: integer
+          description: Оценка за домашнее задание
+    HomeworkDetails:
+      required:
+      - attachment
+      - homework_text
+      - task
+      type: object
+      properties:
+        homework_text:
+          type: string
+          description: Текст домашнего задания
+        task:
+          type: string
+          description: Текст ответа стажера
+        attachment:
+          type: string
+          description: Ссылка на файл ответа стажера
+    homeworks_trainee_id_body:
+      required:
+      - comment
+      - mark
+      type: object
+      properties:
+        mark:
+          type: integer
+          description: Оценка за домашнее задание
+        comment:
+          type: string
+          description: Комментарий к домашнему заданию
