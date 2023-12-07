@@ -41,7 +41,7 @@ paths:
                 email: ivan@example.com
                 status: Статус пользователя
                 avatar: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAAAAB..."
-                role: "Стажер"
+                role: Стажер
         "404":
           description: Пользователь не найден
           content:
@@ -70,7 +70,7 @@ paths:
               $ref: '#/components/schemas/UserProfileUpdate'
             example:
               status: Неактивен
-              avatar: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAAAAB..."
+              avatar: string
         required: true
       responses:
         "200":
@@ -102,9 +102,9 @@ components:
       - lastname
       - name
       - number
+      - role
       - status
       - surname
-      - role
       type: object
       properties:
         name:
@@ -135,11 +135,11 @@ components:
           description: Статус пользователя
         avatar:
           type: string
-          description: "Строка base64, представляющая аватар пользователя"
+          description: Бинарный формат изображения пользователя
+          format: binary
         role:
           type: string
           description: Роль пользователя
-          
     UserProfileUpdate:
       type: object
       properties:
@@ -148,4 +148,5 @@ components:
           description: Новый статус пользователя
         avatar:
           type: string
-          description: "Строка base64, представляющая новый аватар пользователя"
+          description: Бинарный формат изображения пользователя
+          format: binary
