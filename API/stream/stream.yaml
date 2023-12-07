@@ -1,0 +1,30 @@
+---
+openapi: 3.0.0
+info:
+  title: API Лекций
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/98QLOKER/stream/1.0.0
+  description: SwaggerHub API Auto Mocking
+paths:
+  /lectures/{lecture_id}/end:
+    post:
+      summary: Завершить трансляцию лекции
+      operationId: endLecture
+      parameters:
+      - name: lecture_id
+        in: path
+        description: Идентификатор лекции
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Успешное завершение лекции
+          content:
+            application/json:
+              example:
+                message: Трансляция закончена
+components: {}
