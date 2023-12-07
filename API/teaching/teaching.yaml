@@ -296,7 +296,8 @@ components:
           description: Текст ответа стажера
         attachment:
           type: string
-          description: Ссылка на файл ответа стажера
+          description: Файл в бинарном виде
+          format: binary
     MentorTrainee:
       required:
       - f_comment
