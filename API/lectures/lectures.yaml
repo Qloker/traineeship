@@ -192,6 +192,67 @@ paths:
             application/json:
               example:
                 error: "Лекция с указанным ID не существует"
+                
+  /lectures/{lecture_id}/link:
+    get:
+      tags:
+        - Лекции
+      summary: Поделиться ссылкой трансляции или записи
+      operationId: getLectureLink
+      parameters:
+        - name: lecture_id
+          in: path
+          required: true
+          description: Идентификатор лекции
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: "Ссылка успешно получена"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    description: URL трансляции или записи
+        '404':
+          description: "Лекция не найдена"
+          content:
+            application/json:
+              example:
+                error: "Лекция с указанным ID не существует"
+          
+  /lectures/{lecture_id}/start:
+    post:
+      tags:
+        - Лекции
+      summary: Открытие лекции и начало онлайн трансляции
+      operationId: startLecture
+      parameters:
+        - name: lecture_id
+          in: path
+          required: true
+          description: Идентификатор лекции
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: "Лекция успешно открыта и трансляция начата"
+          content:
+            application/json:
+              example:
+                message: "Лекция успешно открыта и трансляция начата"
+        '404':
+          description: "Лекция не найдена"
+          content:
+            application/json:
+              example:
+                error: "Лекция с указанным ID не существует"
+      
 components:
   schemas:
     Lecture:
