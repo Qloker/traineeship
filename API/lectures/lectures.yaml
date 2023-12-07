@@ -136,11 +136,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/Lecture'
         "404":
-          description: Лекция не найдена
+          description: Файл не найден
           content:
             application/json:
               example:
-                error: Лекция с указанным ID не существует
+                error: Дополнительный файл не найден
       
   /traineeships/{traineeship_id}/lectures/{lecture_id}/upload_file:
     post:
@@ -253,6 +253,41 @@ paths:
               example:
                 error: "Лекция с указанным ID не существует"
       
+  /traineeships/{traineeship_id}/lectures/{lecture_id}/download_file:
+    get:
+      tags:
+        - Лекции
+      summary: Скачивание дополнительного материала, который загрузил ментор
+      operationId: downloadMaterialByMentor
+      parameters:
+        - name: traineeship_id
+          in: path
+          required: true
+          description: Идентификатор стажировки
+          schema:
+            type: integer
+            format: int64
+        - name: lecture_id
+          in: path
+          required: true
+          description: Идентификатор лекции
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: "Материал успешно скачан"
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: "Файл не найден"
+          content:
+            application/json:
+              example:
+                error: "Файл не найден"
 components:
   schemas:
     Lecture:
