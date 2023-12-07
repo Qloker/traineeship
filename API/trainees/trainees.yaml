@@ -195,9 +195,11 @@ components:
   schemas:
     TraineeWithoutMentor:
       required:
+      - avatar
       - course
       - name
       - surname
+      - traineeship_id
       type: object
       properties:
         name:
@@ -209,9 +211,13 @@ components:
         course:
           type: string
           description: Название курса
+        traineeship_id:
+          type: integer
+          description: id стажировки
         avatar:
           type: string
           description: Изображение стажера
+          format: binary
     CompletedTrainee:
       required:
       - average_mark
@@ -244,6 +250,7 @@ components:
       - f_comment
       - lectures
       - mentor
+      - mentor_id
       - name
       - surname
       type: object
@@ -260,6 +267,9 @@ components:
         mentor:
           type: string
           description: Имя и фамилия ментора
+        mentor_id:
+          type: integer
+          description: id ментора
         lectures:
           minItems: 0
           type: array
@@ -281,3 +291,6 @@ components:
         mark:
           type: integer
           description: Оценка за домашнее задание
+        lecture_id:
+          type: integer
+          description: id лекции
