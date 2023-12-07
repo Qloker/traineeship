@@ -102,7 +102,6 @@ paths:
             application/json:
               example:
                 error: Стажировка с указанным ID не существует
-                
   /traineeships/{traineeship_id}/lectures/{lecture_id}:
     get:
       tags:
@@ -141,153 +140,202 @@ paths:
             application/json:
               example:
                 error: Дополнительный файл не найден
-      
   /traineeships/{traineeship_id}/lectures/{lecture_id}/upload_file:
     post:
       tags:
-        - Лекции
+      - Лекции
       summary: Загрузка дополнительного материала от ментора
       operationId: uploadMaterialByMentor
       parameters:
-        - name: traineeship_id
-          in: path
-          required: true
-          description: Идентификатор стажировки
-          schema:
-            type: integer
-            format: int64
-        - name: lecture_id
-          in: path
-          required: true
-          description: Идентификатор лекции
-          schema:
-            type: integer
-            format: int64
-      requestBody:
+      - name: traineeship_id
+        in: path
+        description: Идентификатор стажировки
         required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      - name: lecture_id
+        in: path
+        description: Идентификатор лекции
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      requestBody:
         content:
           multipart/form-data:
             schema:
-              type: object
-              properties:
-                mentor_file:
-                  type: string
-                  format: binary
+              $ref: '#/components/schemas/lecture_id_upload_file_body'
+        required: true
       responses:
-        '201':
-          description: "Материал успешно загружен"
+        "201":
+          description: Материал успешно загружен
           content:
             application/json:
               example:
-                message: "Материал успешно загружен"
-        '400':
-          description: "Некорректный запрос от frontend"
+                message: Материал успешно загружен
+        "400":
+          description: Некорректный запрос от frontend
           content:
             application/json:
               example:
-                error: "Не найдено обязательное поле в запросе"
-        '404':
-          description: "Лекция не найдена"
+                error: Не найдено обязательное поле в запросе
+        "404":
+          description: Лекция не найдена
           content:
             application/json:
               example:
-                error: "Лекция с указанным ID не существует"
-                
+                error: Лекция с указанным ID не существует
   /lectures/{lecture_id}/link:
     get:
       tags:
-        - Лекции
+      - Лекции
       summary: Поделиться ссылкой трансляции или записи
       operationId: getLectureLink
       parameters:
-        - name: lecture_id
-          in: path
-          required: true
-          description: Идентификатор лекции
-          schema:
-            type: integer
-            format: int64
+      - name: lecture_id
+        in: path
+        description: Идентификатор лекции
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
       responses:
-        '200':
-          description: "Ссылка успешно получена"
+        "200":
+          description: Ссылка успешно получена
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  url:
-                    type: string
-                    description: URL трансляции или записи
-        '404':
-          description: "Лекция не найдена"
+                $ref: '#/components/schemas/inline_response_200'
+        "404":
+          description: Лекция не найдена
           content:
             application/json:
               example:
-                error: "Лекция с указанным ID не существует"
-          
+                error: Лекция с указанным ID не существует
   /lectures/{lecture_id}/start:
     post:
       tags:
-        - Лекции
+      - Лекции
       summary: Открытие лекции и начало онлайн трансляции
       operationId: startLecture
       parameters:
-        - name: lecture_id
-          in: path
-          required: true
-          description: Идентификатор лекции
-          schema:
-            type: integer
-            format: int64
+      - name: lecture_id
+        in: path
+        description: Идентификатор лекции
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
       responses:
-        '200':
-          description: "Лекция успешно открыта и трансляция начата"
+        "200":
+          description: Лекция успешно открыта и трансляция начата
           content:
             application/json:
               example:
-                message: "Лекция успешно открыта и трансляция начата"
-        '404':
-          description: "Лекция не найдена"
+                message: Лекция успешно открыта и трансляция начата
+        "404":
+          description: Лекция не найдена
           content:
             application/json:
               example:
-                error: "Лекция с указанным ID не существует"
-      
+                error: Лекция с указанным ID не существует
   /traineeships/{traineeship_id}/lectures/{lecture_id}/download_file:
     get:
       tags:
-        - Лекции
-      summary: Скачивание дополнительного материала, который загрузил ментор
+      - Лекции
+      summary: "Скачивание дополнительного материала, который загрузил ментор"
       operationId: downloadMaterialByMentor
       parameters:
-        - name: traineeship_id
-          in: path
-          required: true
-          description: Идентификатор стажировки
-          schema:
-            type: integer
-            format: int64
-        - name: lecture_id
-          in: path
-          required: true
-          description: Идентификатор лекции
-          schema:
-            type: integer
-            format: int64
+      - name: traineeship_id
+        in: path
+        description: Идентификатор стажировки
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      - name: lecture_id
+        in: path
+        description: Идентификатор лекции
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
       responses:
-        '200':
-          description: "Материал успешно скачан"
+        "200":
+          description: Материал успешно скачан
           content:
             application/octet-stream:
               schema:
                 type: string
                 format: binary
-        '404':
-          description: "Файл не найден"
+        "404":
+          description: Файл не найден
           content:
             application/json:
               example:
-                error: "Файл не найден"
+                error: Файл не найден
+  /lectures/{lecture_id}/save_homework:
+    post:
+      tags:
+      - Лекции
+      summary: Сохранение ответа стажера в домашнем задании
+      operationId: saveHomework
+      parameters:
+      - name: lecture_id
+        in: path
+        description: Идентификатор лекции
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      - name: trainee_id
+        in: query
+        description: Идентификатор стажера
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SaveHomeworkRequest'
+      responses:
+        "200":
+          description: Ответ успешно сохранен
+          content:
+            application/json:
+              example:
+                error: Ответ успешно сохранен
+        "400":
+          description: Некорректный запрос от frontend
+          content:
+            application/json:
+              example:
+                error: Некорректный запрос
+        "404":
+          description: Лекция не найдена
+          content:
+            application/json:
+              example:
+                error: Лекция не найдена
 components:
   schemas:
     Lecture:
@@ -353,3 +401,26 @@ components:
         mentor:
           type: string
           description: Имя и фамилия ментора лекции
+    SaveHomeworkRequest:
+      type: object
+      properties:
+        task:
+          type: string
+          description: Текст ответа стажера
+        attachment:
+          type: string
+          description: Файл ответа стажера
+          format: binary
+    lecture_id_upload_file_body:
+      type: object
+      properties:
+        mentor_file:
+          type: string
+          format: binary
+    inline_response_200:
+      type: object
+      properties:
+        url:
+          type: string
+          description: URL трансляции или записи
+
