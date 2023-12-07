@@ -1,0 +1,210 @@
+---
+openapi: 3.0.0
+info:
+  title: API Обсуждений
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/98QLOKER/threads/1.0.0
+  description: SwaggerHub API Auto Mocking
+paths:
+  /threads/{thread_id}/sendComment:
+    post:
+      summary: Отправить комментарий
+      operationId: sendComment
+      parameters:
+      - name: thread_id
+        in: path
+        description: Идентификатор обсуждения
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: user_id
+        in: query
+        description: Идентификатор пользователя
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      requestBody:
+        description: Данные комментария для отправки
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/thread_id_sendComment_body'
+        required: true
+      responses:
+        "200":
+          description: Успешная операция
+  /threads/{thread_id}/getComments:
+    get:
+      summary: Получить комментарии
+      operationId: getComments
+      parameters:
+      - name: thread_id
+        in: path
+        description: Идентификатор обсуждения
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommentWithUser'
+  /{traineeship_id}/threads:
+    get:
+      summary: Получить список открытых обсуждений
+      operationId: getOpenThreads
+      parameters:
+      - name: traineeship_id
+        in: path
+        description: Идентификатор стажировки
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OpenThread'
+  /threads/{thread_id}:
+    get:
+      summary: Открыть обсуждение
+      operationId: openThread
+      parameters:
+      - name: thread_id
+        in: path
+        description: Идентификатор обсуждения
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenThread'
+components:
+  schemas:
+    Comment:
+      required:
+      - content
+      - date
+      type: object
+      properties:
+        content:
+          type: string
+          description: Текст комментария
+        date:
+          type: string
+          description: Дата и время отправки комментария
+          format: date-time
+        file:
+          type: string
+          description: Бинарные данные файла
+          format: binary
+    User:
+      required:
+      - avatar
+      - name
+      - role
+      - surname
+      - user_id
+      type: object
+      properties:
+        user_id:
+          type: string
+          description: Идентификатор пользователя
+        name:
+          type: string
+          description: Имя пользователя
+        surname:
+          type: string
+          description: Фамилия пользователя
+        role:
+          type: string
+          description: Роль пользователя
+        avatar:
+          type: string
+          description: Аватар пользователя в бинарном формате
+          format: binary
+    CommentWithUser:
+      required:
+      - content
+      - date
+      - user
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        content:
+          type: string
+          description: Текст комментария
+        date:
+          type: string
+          description: Дата и время отправки комментария
+          format: date-time
+        file:
+          type: string
+          description: Бинарные данные файла
+          format: binary
+    OpenThread:
+      required:
+      - comment_count
+      - l_name
+      - l_surname
+      - m_name
+      - m_surname
+      - title
+      type: object
+      properties:
+        title:
+          type: string
+          description: Название лекции
+        m_name:
+          type: string
+          description: Имя ментора
+        m_surname:
+          type: string
+          description: Фамилия ментора
+        l_name:
+          type: string
+          description: Имя последнего комментатора
+        l_surname:
+          type: string
+          description: Фамилия последнего комментатора
+        comment_count:
+          type: integer
+          description: Число комментариев в обсуждении
+    thread_id_sendComment_body:
+      type: object
+      properties:
+        content:
+          type: string
+          description: Текст комментария
+        date:
+          type: string
+          description: Дата и время отправки комментария
+          format: date-time
+        file:
+          type: string
+          description: Бинарные данные файла
+          format: binary
