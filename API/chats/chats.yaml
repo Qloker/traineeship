@@ -1,0 +1,210 @@
+---
+openapi: 3.0.0
+info:
+  title: API Чатов
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/98QLOKER/chats/1.0.0
+  description: SwaggerHub API Auto Mocking
+paths:
+  /{user_id}/chats:
+    get:
+      summary: Получить список чатов пользователя
+      operationId: getUserChats
+      parameters:
+      - name: user_id
+        in: path
+        description: Идентификатор пользователя
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Успешное получение списка чатов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Chat'
+  /{traineeship_id}/chat:
+    get:
+      summary: Открыть чат стажировки
+      operationId: getTraineeshipChat
+      parameters:
+      - name: traineeship_id
+        in: path
+        description: Идентификатор стажировки
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Успешное открытие чата стажировки
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+  /chats/{chat_id}/sendMessage:
+    post:
+      summary: Отправить сообщение в чат
+      operationId: sendChatMessage
+      parameters:
+      - name: chat_id
+        in: path
+        description: Идентификатор чата
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: user_id
+        in: query
+        description: Идентификатор пользователя
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      requestBody:
+        description: Данные сообщения для отправки
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/chat_id_sendMessage_body'
+        required: true
+      responses:
+        "200":
+          description: Успешная отправка сообщения
+  /chats/{chat_id}/getMessages:
+    get:
+      summary: Получить сообщения из чата
+      operationId: getChatMessages
+      parameters:
+      - name: chat_id
+        in: path
+        description: Идентификатор чата
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Успешное получение сообщений из чата
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChatMessage'
+  /chats/open_with_{user_id}:
+    get:
+      summary: Открыть чат с пользователем
+      operationId: openChatWithUser
+      parameters:
+      - name: user_id
+        in: path
+        description: Идентификатор пользователя
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Успешное открытие чата с пользователем
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+components:
+  schemas:
+    Chat:
+      required:
+      - chat_id
+      - chat_name
+      type: object
+      properties:
+        chat_id:
+          type: string
+          description: Идентификатор чата
+        chat_name:
+          type: string
+          description: Название чата
+    ChatMessage:
+      required:
+      - content
+      - date
+      - user
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/ChatMessage_user'
+        content:
+          type: string
+          description: Текст сообщения
+        date:
+          type: string
+          description: Дата и время сообщения
+          format: date-time
+        file:
+          type: string
+          description: Файл в бинарном виде
+          format: binary
+    inline_response_200:
+      required:
+      - chat_name
+      type: object
+      properties:
+        chat_name:
+          type: string
+          description: Название чата стажировки
+    chat_id_sendMessage_body:
+      required:
+      - content
+      type: object
+      properties:
+        content:
+          type: string
+          description: Текст сообщения
+    inline_response_200_1:
+      required:
+      - chat_id
+      - chat_name
+      type: object
+      properties:
+        chat_id:
+          type: string
+          description: Идентификатор чата
+        chat_name:
+          type: string
+          description: Название чата
+    ChatMessage_user:
+      required:
+      - avatar
+      - name
+      - role
+      - surname
+      - user_id
+      type: object
+      properties:
+        user_id:
+          type: string
+          description: Идентификатор пользователя
+        name:
+          type: string
+          description: Имя пользователя
+        surname:
+          type: string
+          description: Фамилия пользователя
+        role:
+          type: string
+          description: Роль пользователя
+        avatar:
+          type: string
+          description: Аватар пользователя
