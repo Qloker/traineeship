@@ -1,0 +1,85 @@
+---
+openapi: 3.0.0
+info:
+  title: API Форм
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/98QLOKER/forms/1.0.0
+  description: SwaggerHub API Auto Mocking
+paths:
+  /forms/{form_id}:
+    post:
+      summary: Отправить данные формы
+      operationId: sendFormData
+      parameters:
+      - name: form_id
+        in: path
+        description: Идентификатор формы
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Данные формы для сохранения
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/forms_form_id_body'
+        required: true
+      responses:
+        "200":
+          description: Успешное сохранение данных формы
+          content:
+            application/json:
+              example:
+                message: Данные формы успешно сохранены
+components:
+  schemas:
+    FormInputData:
+      required:
+      - birth_date
+      - city
+      - email
+      - name
+      - number
+      - surname
+      - task1
+      - task2
+      type: object
+      properties:
+        name:
+          type: string
+          description: Имя
+        surname:
+          type: string
+          description: Фамилия
+        lastname:
+          type: string
+          description: Отчество
+        birth_date:
+          type: string
+          description: Дата рождения
+          format: date
+        city:
+          type: string
+          description: Город
+        email:
+          type: string
+          description: Почта
+          format: email
+        number:
+          type: string
+          description: Номер телефона
+        task1:
+          type: string
+          description: Текст задания 1
+        task2:
+          type: string
+          description: Файл задания 2 в бинарном формате
+          format: binary
+    forms_form_id_body:
+      type: object
+      properties:
+        formData:
+          $ref: '#/components/schemas/FormInputData'
