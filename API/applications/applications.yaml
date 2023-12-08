@@ -1,245 +1,255 @@
----
 openapi: 3.0.0
 info:
   title: Управление заявками
   version: 1.0.0
-servers:
-- url: https://virtserver.swaggerhub.com/98QLOKER/applications/1.0.0
-  description: SwaggerHub API Auto Mocking
 tags:
-- name: Заявки
+  - name: Заявки
 paths:
   /applications:
     get:
       tags:
-      - Заявки
+        - Заявки
       summary: Получение списка заявок
       operationId: getApplications
       responses:
-        "200":
-          description: Список заявок
+        '200':
+          description: "Список заявок"
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Application'
-        "404":
-          description: Заявки не найдены
+        '404':
+          description: "Заявки не найдены"
           content:
             application/json:
               example:
-                error: Заявки не найдены
+                error: "Заявки не найдены"
+
   /applications/{application_id}/send_access:
     post:
       tags:
-      - Заявки
+        - Заявки
       summary: Отправка доступа
       operationId: sendAccess
       parameters:
-      - name: application_id
-        in: path
-        description: Идентификатор заявки
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          format: int64
+        - name: application_id
+          in: path
+          required: true
+          description: Идентификатор заявки
+          schema:
+            type: integer
+            format: int64
       responses:
-        "200":
-          description: Доступ отправлен успешно
+        '200':
+          description: "Доступ отправлен успешно"
           content:
             application/json:
               example:
-                message: Доступ успешно отправлен
-        "400":
-          description: Некорректный запрос от frontend
+                message: "Доступ успешно отправлен"
+        '400':
+          description: "Некорректный запрос от frontend"
           content:
             application/json:
               example:
-                error: Не найдено обязательное поле в запросе
-        "404":
-          description: Заявка не найдена
+                error: "Не найдено обязательное поле в запросе"
+        '404':
+          description: "Заявка не найдена"
           content:
             application/json:
               example:
-                error: Заявка с указанным ID не существует
+                error: "Заявка с указанным ID не существует"
+
+  /applications/saved:
+    get:
+      tags:
+        - Заявки
+      summary: Получение списка сохраненных заявок
+      operationId: getSavedApplications
+      responses:
+        '200':
+          description: "Список сохраненных заявок"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Application'
+        '404':
+          description: "Сохраненные заявки не найдены"
+          content:
+            application/json:
+              example:
+                error: "Сохраненные заявки не найдены"
+
   /applications/send_access_bulk:
     post:
       tags:
-      - Заявки
+        - Заявки
       summary: Отправка доступа к нескольким заявкам
       operationId: sendAccessBulk
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               type: array
               items:
                 $ref: '#/components/schemas/AccessCredentialsBulk'
-        required: true
       responses:
-        "200":
-          description: Данные успешно отправлены
-        "400":
-          description: Некорректный запрос от frontend
+        '200':
+          description: "Данные успешно отправлены"
+        '400':
+          description: "Некорректный запрос от frontend"
           content:
             application/json:
               example:
-                error: Не найдено обязательное поле в запросе
-        "404":
-          description: Заявка не найдена
+                error: "Не найдено обязательное поле в запросе"
+        '404':
+          description: "Заявка не найдена"
           content:
             application/json:
               example:
-                error: Заявка с указанным ID не существует
+                error: "Заявка с указанным ID не существует"
+
   /applications/{application_id}/save_access:
     post:
       tags:
-      - Заявки
+        - Заявки
       summary: Сохранение логина и пароля
       operationId: saveAccess
       parameters:
-      - name: application_id
-        in: path
-        description: Идентификатор заявки
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          format: int64
+        - name: application_id
+          in: path
+          required: true
+          description: Идентификатор заявки
+          schema:
+            type: integer
+            format: int64
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/AccessCredentials'
-        required: true
       responses:
-        "200":
-          description: Логин и пароль сохранены успешно
+        '200':
+          description: "Логин и пароль сохранены успешно"
           content:
             application/json:
               example:
-                message: Логин и пароль успешно сохранены
-        "400":
-          description: Некорректный запрос от frontend
+                message: "Логин и пароль успешно сохранены"
+        '400':
+          description: "Некорректный запрос от frontend"
           content:
             application/json:
               example:
-                error: Не найдено обязательное поле в запросе
-        "404":
-          description: Заявка не найдена
+                error: "Не найдено обязательное поле в запросе"
+        '404':
+          description: "Заявка не найдена"
           content:
             application/json:
               example:
-                error: Заявка с указанным ID не существует
+                error: "Заявка с указанным ID не существует"
+
   /applications/accepted:
     get:
       tags:
-      - Заявки
+        - Заявки
       summary: Получение списка подтвержденных заявок
       operationId: getAcceptedApplications
       responses:
-        "200":
-          description: Список подтвержденных заявок
+        '200':
+          description: "Список подтвержденных заявок"
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Application'
-        "404":
-          description: Подтвержденные заявки не найдены
+        '404':
+          description: "Подтвержденные заявки не найдены"
           content:
             application/json:
               example:
-                error: Подтвержденные заявки не найдены
+                error: "Подтвержденные заявки не найдены"
+
   /applications/not_accepted:
     get:
       tags:
-      - Заявки
+        - Заявки
       summary: Получение списка отклоненных заявок
       operationId: getNotAcceptedApplications
       responses:
-        "200":
-          description: Список отклоненных заявок
+        '200':
+          description: "Список отклоненных заявок"
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Application'
-        "404":
-          description: Отклоненные заявки не найдены
+        '404':
+          description: "Отклоненные заявки не найдены"
           content:
             application/json:
               example:
-                error: Отклоненные заявки не найдены
+                error: "Отклоненные заявки не найдены"
+
   /applications/approved:
     get:
       tags:
-      - Заявки
+        - Заявки
       summary: Получение списка одобренных заявок
       operationId: getApprovedApplications
       responses:
-        "200":
-          description: Список одобренных заявок
+        '200':
+          description: "Список одобренных заявок"
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Application'
-        "404":
-          description: Одобренные заявки не найдены
+        '404':
+          description: "Одобренные заявки не найдены"
           content:
             application/json:
               example:
-                error: Одобренные заявки не найдены
+                error: "Одобренные заявки не найдены"
+
   /applications/not_approved:
     get:
       tags:
-      - Заявки
+        - Заявки
       summary: Получение списка не одобренных заявок
       operationId: getNotApprovedApplications
       responses:
-        "200":
-          description: Список не одобренных заявок
+        '200':
+          description: "Список не одобренных заявок"
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Application'
-        "404":
-          description: Не одобренные заявки не найдены
+        '404':
+          description: "Не одобренные заявки не найдены"
           content:
             application/json:
               example:
-                error: Не одобренные заявки не найдены
+                error: "Не одобренные заявки не найдены"
+
 components:
   schemas:
     Application:
-      required:
-      - application_id
-      - birth_date
-      - city
-      - date
-      - email
-      - lastname
-      - name
-      - number
-      - surname
-      - test_tasks
-      - traineeship
       type: object
       properties:
         application_id:
           type: integer
-          description: Идентификатор заявки
           format: int64
+          description: Идентификатор заявки
           example: 11
         name:
           type: string
@@ -252,36 +262,46 @@ components:
           description: Отчество
         birth_date:
           type: string
-          description: Дата рождения
           format: date
+          description: Дата рождения
         city:
           type: string
           description: Город
         number:
           type: integer
-          description: Номер телефона
           format: int64
+          description: Номер телефона
           example: 79000000000
         email:
           type: string
-          description: Email
           format: email
+          description: Email
         test_tasks:
           type: array
-          description: Массив тестовых заданий
           items:
             type: string
+          description: Массив тестовых заданий
         date:
           type: string
-          description: Дата подачи заявки
           format: date-time
+          description: Дата подачи заявки
         traineeship:
           type: string
           description: Название стажировки
-    AccessCredentials:
       required:
-      - login
-      - password
+        - application_id
+        - name
+        - surname
+        - lastname
+        - birth_date
+        - city
+        - number
+        - email
+        - test_tasks
+        - date
+        - traineeship
+
+    AccessCredentials:
       type: object
       properties:
         login:
@@ -291,17 +311,17 @@ components:
         password:
           type: string
           description: Пароль для доступа
-    AccessCredentialsBulk:
       required:
-      - application_id
-      - login
-      - password
+        - login
+        - password
+
+    AccessCredentialsBulk:
       type: object
       properties:
         application_id:
           type: integer
-          description: Идентификатор заявки
           format: int64
+          description: Идентификатор заявки
           example: 11
         login:
           type: integer
@@ -310,3 +330,11 @@ components:
         password:
           type: string
           description: Пароль для доступа
+      required:
+        - application_id
+        - login
+        - password
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/98QLOKER/applications/1.0.0
+
